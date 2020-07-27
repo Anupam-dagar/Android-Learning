@@ -1,7 +1,6 @@
 package com.example.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +14,8 @@ class DetailFragment : Fragment() {
     }
     lateinit var heading : TextView;
     lateinit var body : TextView;
-    lateinit var headingText: String
-    lateinit var bodyText: String
+    var headingText: String = ""
+    var bodyText: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
