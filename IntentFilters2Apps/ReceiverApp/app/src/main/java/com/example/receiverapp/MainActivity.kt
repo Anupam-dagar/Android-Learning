@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         displayText =
             if (intent.action == "android.intent.action.MAIN") "Hello World! Send text from sender app!" else {
-                intent.getStringExtra("sender_text").toString()
+                intent.getStringExtra("com.example.senderapp.sender_text").toString()
             }
 
         val senderTextView = findViewById<TextView>(R.id.senderText)
