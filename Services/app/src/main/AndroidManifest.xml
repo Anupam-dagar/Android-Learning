@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <service android:name=".DemoService" />
+        <service android:name=".RandomNumberService" />
     </application>
 
 </manifest>

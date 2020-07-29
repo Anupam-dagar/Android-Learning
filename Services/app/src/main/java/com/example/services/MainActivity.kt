@@ -12,10 +12,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        serviceIntent = Intent(applicationContext, DemoService::class.java)
+        serviceIntent = Intent(applicationContext, RandomNumberService::class.java)
     }
 
     fun serviceStarter(view: View) {
         startService(serviceIntent)
+    }
+
+    fun serviceStopper(view: View) {
+        stopService(serviceIntent)
     }
 }
