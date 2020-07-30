@@ -1,13 +1,15 @@
 package com.example.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class DataAdapter(private val cities: Array<String>, private val descriptions: Array<String>, private val cityImage: Int): RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
+class DataAdapter(private var cities: MutableList<String>, private var descriptions: MutableList<String>, private var cityImage: Int): RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
 
     class DataViewHolder(view:  View): RecyclerView.ViewHolder(view) {
         val cityView: TextView
@@ -37,4 +39,24 @@ class DataAdapter(private val cities: Array<String>, private val descriptions: A
         holder.cityImageView.setImageResource(cityImage )
     }
 
+    fun clear() {
+        Log.d("adapter", "inside clear")
+        cities.clear()
+        descriptions.clear()
+        notifyDataSetChanged()
+    }
+
+    fun addAll() {
+        Log.d("adapter", "inside addall")
+        cities.add("India")
+        cities.add("India")
+        cities.add("India")
+        cities.add("India")
+
+        descriptions.add("Refreshed Data")
+        descriptions.add("Refreshed Data")
+        descriptions.add("Refreshed Data")
+        descriptions.add("Refreshed Data")
+        notifyDataSetChanged()
+    }
 }
