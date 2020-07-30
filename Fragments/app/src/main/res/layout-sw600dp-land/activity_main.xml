@@ -11,20 +11,27 @@
             class="com.example.fragments.ListFragment"
             android:layout_width="250dp"
             android:layout_height="match_parent"
-            app:layout_constraintEnd_toStartOf="@+id/detailfragment"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <fragment
-            android:id="@+id/detailfragment"
-            class="com.example.fragments.DetailFragment"
+        <FrameLayout
+            android:id="@+id/fragment_holder"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/listfragment"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+                <fragment
+                    android:id="@+id/detailfragment"
+                    class="com.example.fragments.DetailFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+        </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
