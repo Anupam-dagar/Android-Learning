@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".RandomNumberService" />
+        <service android:name=".RandomNumberService" android:exported="true" />
     </application>
 
 </manifest>
