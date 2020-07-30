@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">RecyclerView</string>
+
+    <string-array name="cities">
+        <item>Berlin</item>
+        <item>Munich</item>
+        <item>Kuala Lumpur</item>
+        <item>Singapore</item>
+        <item>New Delhi</item>
+        <item>Gurgaon</item>
+        <item>Hisar</item>
+    </string-array>
+
+    <string-array name="descriptions">
+        <item>Capital of Germany</item>
+        <item>A city in germany</item>
+        <item>Capital of Malaysia</item>
+        <item>City Country</item>
+        <item>Capital of India</item>
+        <item>City in NCR, India</item>
+        <item>City in Haryana, India</item>
+    </string-array>
 </resources>
