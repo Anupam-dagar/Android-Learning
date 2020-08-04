@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "ABC",
+      "email": "abc@gmail.com",
+      "contact": {
+        "mobile1": "0123456789",
+        "mobile2": "0123456789",
+        "mobile3": "0123456789"
+      }
+    },
+    {
+      "id": "2",
+      "name": "XYZ",
+      "email": "xyz@gmail.com",
+      "contact": {
+        "mobile1": "0123456789",
+        "mobile2": "0123456789",
+        "mobile3": "0123456789"
+      }
+    }
+  ]
+}
