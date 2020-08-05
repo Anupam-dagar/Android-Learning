@@ -1,8 +1,10 @@
 package com.example.unsplashapp
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -24,28 +26,35 @@ class RecyclerViewDataAdapter(private var imageData: MutableList<PexelsDataPhoto
 
     override fun onBindViewHolder(holder: RecyclerViewDataAdapter.ViewHolder, position: Int) {
         holder.imageName.text = imageData[position].photographer
-        holder.imageLikes.text = "0"
+        val sharedPrefs = holder.context.getSharedPreferences("imageapp", Context.MODE_PRIVATE)
+        val currentLikes = sharedPrefs.getInt(imageData[position].id.toString(), 0).toString()
+        holder.imageLikes.text = currentLikes
+        holder.imageId.text = imageData[position].id.toString()
         Picasso.get()
             .load(imageData[position].src.large).into(holder.image)
     }
 
-    class ViewHolder(view: View, onImageClickListener: OnImageClickListener) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class ViewHolder(view: View, onImageClickListener: OnImageClickListener) : RecyclerView.ViewHolder(view) {
         var image = view.findViewById<ImageView>(R.id.unsplashImageView)
         var imageName = view.findViewById<TextView>(R.id.imageName)
         var imageLikes = view.findViewById<TextView>(R.id.imageLikes)
         var onImageClickListener = onImageClickListener
+        var likeButton = view.findViewById<Button>(R.id.likeButton)
+        var imageId = view.findViewById<TextView>(R.id.photoId)
+        val context = view.context
 
         init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            onImageClickListener.onImageClick(adapterPosition)
+            itemView.setOnClickListener{
+                onImageClickListener.onImageClick(adapterPosition)
+            }
+            likeButton.setOnClickListener{
+                onImageClickListener.onLikeButtonClick(adapterPosition)
+            }
         }
     }
 
     interface OnImageClickListener {
         fun onImageClick(position: Int)
+        fun onLikeButtonClick(position: Int)
     }
-
 }
