@@ -1,14 +1,14 @@
 package com.example.unsplashapp
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
-class RecyclerViewDataAdapter(private var imageData: MutableList<String>, private var onImageClickListener: OnImageClickListener) :
+class RecyclerViewDataAdapter(private var imageData: MutableList<PexelsDataPhoto>, private var onImageClickListener: OnImageClickListener) :
     RecyclerView.Adapter<RecyclerViewDataAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,9 +23,10 @@ class RecyclerViewDataAdapter(private var imageData: MutableList<String>, privat
 
 
     override fun onBindViewHolder(holder: RecyclerViewDataAdapter.ViewHolder, position: Int) {
-        holder.imageName.text = "image name"
-        holder.imageLikes.text = "20"
-        holder.image.setImageResource(R.drawable.city)
+        holder.imageName.text = imageData[position].photographer
+        holder.imageLikes.text = "0"
+        Picasso.get()
+            .load(imageData[position].src.large).into(holder.image)
     }
 
     class ViewHolder(view: View, onImageClickListener: OnImageClickListener) : RecyclerView.ViewHolder(view), View.OnClickListener {
