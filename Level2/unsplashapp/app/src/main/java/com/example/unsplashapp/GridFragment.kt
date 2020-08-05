@@ -18,6 +18,13 @@ class GridFragment : Fragment(), RecyclerViewDataAdapter.OnImageClickListener {
     var imagearray = mutableListOf<PexelsDataPhoto>()
     lateinit var recyclerView: RecyclerView
 
+    companion object {
+        fun newInstance(): GridFragment {
+            val fragment = GridFragment()
+            return fragment
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
