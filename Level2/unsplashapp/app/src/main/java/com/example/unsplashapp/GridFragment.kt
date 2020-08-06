@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +15,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class GridFragment : Fragment(), RecyclerViewDataAdapter.OnImageClickListener {
-    var imagearray = mutableListOf<PexelsDataPhoto>()
     lateinit var recyclerView: RecyclerView
+    lateinit var adapter: RecyclerViewDataAdapter
 
     companion object {
         fun newInstance(): GridFragment {
-            val fragment = GridFragment()
-            return fragment
+            return GridFragment()
         }
     }
 
@@ -34,36 +31,41 @@ class GridFragment : Fragment(), RecyclerViewDataAdapter.OnImageClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.image_grid, container, false)
         recyclerView = view.findViewById(R.id.imageGridRecyclerView)
-        val adapter = RecyclerViewDataAdapter(imagearray, this)
+        adapter = RecyclerViewDataAdapter(this)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(inflater.context,3)
+        recyclerView.layoutManager = GridLayoutManager(inflater.context, 3)
         getPexelsImages(inflater.context)
         return view
     }
 
-    override fun onImageClick(position: Int) {
-        val item = recyclerView[position]
-        val likes = item.findViewById<TextView>(R.id.imageLikes).text.toString()
+    override fun onImageClick(imageData: PexelsDataPhoto, likes: String) {
         val transaction = fragmentManager?.beginTransaction()
-        val detailfragment = DetailFragment.newInstance(imagearray[position].photographer, likes, imagearray[position].id, imagearray[position].src.large)
+        val detailfragment = DetailFragment.newInstance(
+            imageData.photographer,
+            likes,
+            imageData.id,
+            imageData.src.large
+        )
         transaction?.replace(R.id.fragment_holder, detailfragment)
         transaction?.addToBackStack(null)
         transaction?.commit()
     }
 
-    override fun onLikeButtonClick(position: Int) {
-        val item = recyclerView[position]
-        val photoIdView = item.findViewById<TextView>(R.id.photoId)
-        val photoId = photoIdView.text.toString()
-        val sharedPrefs = activity!!.getSharedPreferences("imageapp", Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
-        val currentLikes = sharedPrefs.getInt(photoId, 0)
-        val newLikes = currentLikes + 1
-        editor.putInt(photoId, newLikes)
-        editor.apply()
-        editor.commit()
-        photoIdView.text = newLikes.toString()
-        recyclerView.adapter?.notifyItemChanged(position)
+    override fun onLikeButtonClick(imageData: PexelsDataPhoto, currentLikes: Int, photoId: String, position: Int) {
+        adapter.likeImage(currentLikes, photoId, position)
+        var detailfragment = fragmentManager?.findFragmentById(R.id.fragment_holder)
+        if (detailfragment != null && detailfragment is DetailFragment) {
+            detailfragment = DetailFragment.newInstance(
+                imageData.photographer,
+                currentLikes.plus(1).toString(),
+                imageData.id,
+                imageData.src.large
+            )
+            val transaction = fragmentManager!!.beginTransaction()
+            transaction.replace(R.id.fragment_holder, detailfragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
     }
 
     private fun getPexelsImages(context: Context) {
@@ -74,13 +76,16 @@ class GridFragment : Fragment(), RecyclerViewDataAdapter.OnImageClickListener {
                 call: Call<PexelsDataResponse>,
                 response: Response<PexelsDataResponse>
             ) {
-                imagearray.addAll(response!!.body()!!.photos)
-                recyclerView.adapter?.notifyDataSetChanged()
+                adapter.addImageData(response.body()!!.photos)
             }
 
             override fun onFailure(call: Call<PexelsDataResponse>?, t: Throwable?) {
                 Log.d("request", "$t")
-                Toast.makeText(context, "An error occurred while getting images.", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    "An error occurred while getting images.",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
         })
