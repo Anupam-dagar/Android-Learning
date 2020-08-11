@@ -7,7 +7,6 @@ import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.example.tvfoodapp.R
 import com.example.tvfoodapp.model.Movie
-import com.squareup.picasso.Picasso
 import kotlin.properties.Delegates
 
 class CardPresenter : Presenter() {
@@ -42,9 +41,7 @@ class CardPresenter : Presenter() {
         cardView.titleText = movie.title
         cardView.contentText = movie.overview
         cardView.setMainImageDimensions(313, 176)
-        Picasso.get()
-            .load(movie.poster_path).into(cardView.mainImageView);
-
+        cardView.mainImageView.setImageResource(R.drawable.city)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
