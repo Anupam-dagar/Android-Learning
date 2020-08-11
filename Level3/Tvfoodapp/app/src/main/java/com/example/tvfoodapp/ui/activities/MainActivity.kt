@@ -1,4 +1,4 @@
-package com.example.tvfoodapp.ui.main
+package com.example.tvfoodapp.ui.activities
 
 import android.app.Activity
 import android.os.Bundle

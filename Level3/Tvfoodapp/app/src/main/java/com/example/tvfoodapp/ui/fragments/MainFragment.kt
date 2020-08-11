@@ -1,17 +1,12 @@
-package com.example.tvfoodapp.ui.main
+package com.example.tvfoodapp.ui.fragments
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.SparseArray
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseFragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
-import com.example.tvfoodapp.Presenters.CardPresenter
+import com.example.tvfoodapp.ui.Presenters.CardPresenter
 import com.example.tvfoodapp.R
 import com.example.tvfoodapp.model.Movie
 

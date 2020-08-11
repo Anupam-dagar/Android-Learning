@@ -1,4 +1,4 @@
-package com.example.tvfoodapp.Presenters
+package com.example.tvfoodapp.ui.Presenters
 
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
