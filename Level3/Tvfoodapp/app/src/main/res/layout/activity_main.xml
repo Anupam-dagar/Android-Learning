@@ -4,4 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity"/>
+    tools:context=".ui.main.MainActivity">
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_browse_fragment"
+        android:name="com.example.tvfoodapp.ui.main.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.tvfoodapp.ui.main.MainActivity"
+        tools:deviceIds="tv"
+        tools:ignore="MergeRootFrame" />
+</androidx.constraintlayout.widget.ConstraintLayout>
