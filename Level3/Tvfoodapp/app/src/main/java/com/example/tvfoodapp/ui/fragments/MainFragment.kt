@@ -8,11 +8,13 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseFragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.ViewModelProvider
 import com.example.tvfoodapp.App
 import com.example.tvfoodapp.ui.Presenters.CardPresenter
 import com.example.tvfoodapp.R
 import com.example.tvfoodapp.model.API.TMDBApi
 import com.example.tvfoodapp.model.Movie
+import com.example.tvfoodapp.ui.ViewModel.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -21,6 +23,9 @@ class MainFragment : BrowseFragment() {
 
     @Inject
     lateinit var tmdbApi: TMDBApi
+
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +49,7 @@ class MainFragment : BrowseFragment() {
             .subscribe(
                 { response -> Log.d("resp", "$response") },
                 { error -> Log.d("resp", "$error") })
+//        val a = ViewModelProvider(, factory)[MainFragmentViewModel::class.java]
         val movieList = mutableListOf<Movie>()
         val movie = Movie(
             156.168,
