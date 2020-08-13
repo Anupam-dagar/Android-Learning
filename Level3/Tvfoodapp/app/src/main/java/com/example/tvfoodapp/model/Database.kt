@@ -1,8 +1,13 @@
 package com.example.tvfoodapp.model
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
 class Database private constructor() {
 
-    var movieDao = MovieDAO()
+    @Inject
+    lateinit var movieDao: MovieDAO
 
     companion object {
         @Volatile

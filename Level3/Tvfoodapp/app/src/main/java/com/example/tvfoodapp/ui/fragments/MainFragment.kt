@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.leanback.app.BrowseFragment
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainFragment : BrowseFragment() {
+class MainFragment : BrowseSupportFragment() {
 
     @Inject
     lateinit var tmdbApi: TMDBApi
@@ -29,7 +28,7 @@ class MainFragment : BrowseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity.applicationContext as App).applicationComponent.inject(this)
+        (activity!!.applicationContext as App).applicationComponent.inject(this)
         setupUIElements()
         createMovieRow()
     }
@@ -38,8 +37,8 @@ class MainFragment : BrowseFragment() {
         title = "Videos available"
         headersState = BrowseSupportFragment.HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(activity, R.color.fastlane_background)
-        searchAffordanceColor = ContextCompat.getColor(activity, R.color.search_opaque)
+        brandColor = ContextCompat.getColor(context!!, R.color.fastlane_background)
+        searchAffordanceColor = ContextCompat.getColor(context!!, R.color.search_opaque)
     }
 
     @SuppressLint("CheckResult")

@@ -1,6 +1,10 @@
 package com.example.tvfoodapp.model
 
-class MovieRepository private constructor(private val movieDAO: MovieDAO) {
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class MovieRepository @Inject constructor(private val movieDAO: MovieDAO) {
     fun addMovie(movie: Movie) {
         movieDAO.addMovie(movie)
     }
