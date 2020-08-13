@@ -57,5 +57,10 @@ class CardPresenter : Presenter() {
         val color = if (selected) selectedDefaultBackgroundColor else defaultBackgroundColor
         view.setBackgroundColor(color)
         view.setInfoAreaBackgroundColor(color)
+        if (selected) {
+            view.setPadding(4,4,4,4)
+        } else {
+            view.setPadding(0,0,0,0)
+        }
     }
 }
