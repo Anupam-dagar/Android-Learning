@@ -1,9 +1,7 @@
-package com.example.tvfoodapp.Dagger.Modules.annotation
+package com.example.tvfoodapp.Dagger.annotation
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
-import java.lang.annotation.ElementType
-import java.lang.annotation.RetentionPolicy
 import kotlin.reflect.KClass
 
 @MustBeDocumented

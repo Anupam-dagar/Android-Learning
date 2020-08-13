@@ -11,6 +11,20 @@ class MovieRepository @Inject constructor(private val movieDAO: MovieDAO) {
 
     fun getMovies() = movieDAO.getMovies()
 
+    fun addMovies(moviesList: List<Movie>) {
+        movieDAO.addMovies(moviesList)
+    }
+
+    fun addTopRatedMovie(movie: Movie) {
+        movieDAO.addTopRatedMovie(movie)
+    }
+
+    fun getTopRatedMovies(): List<Movie> = movieDAO.getTopRatedMovies()
+
+    fun addTopRatedMovies(moviesList: List<Movie>) {
+        movieDAO.addTopRatedMovies(moviesList)
+    }
+
     companion object {
         @Volatile
         private var instance: MovieRepository? = null

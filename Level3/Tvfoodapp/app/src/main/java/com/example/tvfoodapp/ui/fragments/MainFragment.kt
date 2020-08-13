@@ -26,6 +26,8 @@ class MainFragment : BrowseSupportFragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    private val API_KEY = "c1faeeb494d1ad57b496cfdf60084cf3"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity!!.applicationContext as App).applicationComponent.inject(this)
@@ -43,43 +45,45 @@ class MainFragment : BrowseSupportFragment() {
 
     @SuppressLint("CheckResult")
     private fun createMovieRow() {
-        tmdbApi.getPopularMovies("c1faeeb494d1ad57b496cfdf60084cf3").subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { response -> Log.d("resp", "$response") },
-                { error -> Log.d("resp", "$error") })
-//        val a = ViewModelProvider(, factory)[MainFragmentViewModel::class.java]
-        val movieList = mutableListOf<Movie>()
-        val movie = Movie(
-            156.168,
-            200,
-            "https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.svg",
-            1234,
-            "hello",
-            "anupam",
-            12.34,
-            "this is an overview",
-            "12-34-5678"
-        )
-        movieList.add(movie)
-        movieList.add(movie)
-        movieList.add(movie)
-        movieList.add(movie)
-
+        val viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
         val rowAdapter = ArrayObjectAdapter(ListRowPresenter())
         val cardPresenter = CardPresenter()
+        adapter = rowAdapter
 
-        for (i in 0..3) {
-            val listRowAdapter = ArrayObjectAdapter(cardPresenter)
+        tmdbApi.getPopularMovies(API_KEY).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { response ->
+                    viewModel.addMovies(response.results)
+                    addMovieRow(viewModel.getMovies(), rowAdapter, cardPresenter, "Popular Movies")
+                },
+                { error -> Log.d("RequestError", "$error") })
 
-            for (j in 0..3) {
-                listRowAdapter.add(movieList[j])
-            }
+        tmdbApi.getTopRatedMovies(API_KEY).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe({ response ->
+                viewModel.addTopRatedMovies(response.results)
+                addMovieRow(
+                    viewModel.getTopRatedMovies(),
+                    rowAdapter,
+                    cardPresenter,
+                    "Top Rated Movies"
+                )
+            }, { error -> Log.d("RequestError", "$error") }
+            )
+    }
 
-            val header = HeaderItem("$i")
-            rowAdapter.add(ListRow(header, listRowAdapter))
+    private fun addMovieRow(
+        movies: List<Movie>,
+        rowAdapter: ArrayObjectAdapter,
+        cardPresenter: CardPresenter,
+        header: String
+    ) {
+        val listRowAdapter = ArrayObjectAdapter(cardPresenter)
+
+        for (movie in movies) {
+            listRowAdapter.add(movie)
         }
 
-        adapter = rowAdapter
+        rowAdapter.add(ListRow(HeaderItem(header), listRowAdapter))
     }
 }

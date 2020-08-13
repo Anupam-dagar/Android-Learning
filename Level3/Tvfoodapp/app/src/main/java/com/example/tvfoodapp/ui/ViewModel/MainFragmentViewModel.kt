@@ -9,4 +9,16 @@ class MainFragmentViewModel @Inject constructor(private val movieRepository: Mov
     fun getMovies() = movieRepository.getMovies()
 
     fun addMovie(movie: Movie) = movieRepository.addMovie(movie)
+
+    fun addMovies(moviesList: List<Movie>) = movieRepository.addMovies(moviesList)
+
+    fun addTopRatedMovie(movie: Movie) {
+        movieRepository.addTopRatedMovie(movie)
+    }
+
+    fun getTopRatedMovies(): List<Movie> = movieRepository.getTopRatedMovies()
+
+    fun addTopRatedMovies(moviesList: List<Movie>) {
+        movieRepository.addTopRatedMovies(moviesList)
+    }
 }
