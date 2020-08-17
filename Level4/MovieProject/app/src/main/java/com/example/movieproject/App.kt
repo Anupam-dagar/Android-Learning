@@ -1,9 +1,9 @@
 package com.example.movieproject
 
 import android.app.Application
-import com.example.base.Di.Components.BaseComponent
-import com.example.base.Di.Components.BaseComponentProvider
-import com.example.base.Di.Components.DaggerBaseComponent
+import com.example.base.di.components.BaseComponent
+import com.example.base.di.components.BaseComponentProvider
+import com.example.base.di.components.DaggerBaseComponent
 
 class App: Application(), BaseComponentProvider {
     lateinit var baseComponent: BaseComponent
