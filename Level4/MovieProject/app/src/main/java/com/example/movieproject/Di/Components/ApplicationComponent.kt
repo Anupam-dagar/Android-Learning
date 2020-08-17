@@ -1,12 +1,11 @@
 package com.example.movieproject.Di.Components
 
-import com.example.movieproject.App
+import com.example.base.Di.Components.BaseComponent
 import com.example.movieproject.Di.Modules.ApplicationModule
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApplicationModule::class])
+@Component(modules = [ApplicationModule::class], dependencies = [BaseComponent::class])
 interface ApplicationComponent {
-    fun inject(app: App)
 }
