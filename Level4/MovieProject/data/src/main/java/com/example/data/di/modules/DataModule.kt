@@ -1,4 +1,4 @@
-package com.example.base.di.modules
+package com.example.data.di.modules
 
 import android.app.Application
 import androidx.room.Room
@@ -9,7 +9,8 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class BaseModule {
+class DataModule {
+
     @Singleton
     @Provides
     fun providesDatabase(applicationContext: Application): Database {

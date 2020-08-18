@@ -1,7 +1,7 @@
-package com.example.data.repositories
+package com.example.base.data.repositories
 
-import com.example.data.dao.MovieDao
-import com.example.data.entity.Movie
+import com.example.base.data.dao.MovieDao
+import com.example.base.data.entity.Movie
 import javax.inject.Inject
 import javax.inject.Singleton
 

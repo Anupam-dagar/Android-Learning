@@ -1,5 +1,4 @@
 include ':base'
-include ':data'
 include ':ui'
 include ':app'
 rootProject.name = "MovieProject"
