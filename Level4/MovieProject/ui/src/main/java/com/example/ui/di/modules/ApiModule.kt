@@ -19,10 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiModule(val application: Context) {
     @UiScope
     @Provides
-    fun providesDatabase(): com.example.ui.data.Database {
+    fun providesDatabase(): Database {
         return Room.databaseBuilder(
             application,
-            com.example.ui.data.Database::class.java, "database-name"
+            Database::class.java, "database-name"
         ).build()
     }
 

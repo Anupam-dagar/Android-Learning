@@ -1,15 +1,13 @@
 package com.example.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.HeaderItem
-import androidx.leanback.widget.ListRow
-import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.example.ui.data.api.TMDBApi
 import com.example.ui.data.Database
@@ -23,6 +21,7 @@ import com.example.ui.viewmodel.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import com.example.uidetails.activities.DetailActivity
 
 class MainFragment : BrowseSupportFragment() {
 
@@ -47,6 +46,7 @@ class MainFragment : BrowseSupportFragment() {
             .inject(this)
         setupUIElements()
         setupData()
+        onItemViewClickedListener = ItemViewClickedListener()
     }
 
     private fun setupUIElements() {
@@ -98,5 +98,22 @@ class MainFragment : BrowseSupportFragment() {
         }
 
         rowAdapter.add(ListRow(HeaderItem(header), listRowAdapter))
+    }
+
+    inner class ItemViewClickedListener: OnItemViewClickedListener {
+        override fun onItemClicked(
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
+        ) {
+            Log.d("clicked", "Media Item clicked: $item")
+            val intent = Intent(activity, DetailActivity::class.java).apply {
+                // pass the item information
+                extras?.putInt("id", (item as Movie).id)
+            }
+            startActivity(intent)
+        }
+
     }
 }
