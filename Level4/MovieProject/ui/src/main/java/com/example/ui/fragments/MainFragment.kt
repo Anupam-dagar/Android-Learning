@@ -1,5 +1,6 @@
 package com.example.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -52,37 +53,36 @@ class MainFragment : BrowseSupportFragment() {
         title = "Movies"
         headersState = BrowseSupportFragment.HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(context!!, R.color.default_background)
+        brandColor = ContextCompat.getColor(context!!, R.color.secondary)
         searchAffordanceColor = ContextCompat.getColor(context!!, R.color.tertiary)
     }
 
+    @SuppressLint("CheckResult")
     private fun setupData() {
         val viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
-        viewModel.addMovies()
-//        val rowAdapter = ArrayObjectAdapter(ListRowPresenter())
-//        val cardPresenter = CardPresenter()
-//        adapter = rowAdapter
-//
-//        tmdbApi.getPopularMovies(API_KEY).subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                { response ->
-//                    viewModel.addMovies(response.results)
-//                    addMovieRow(viewModel.getMovies(), rowAdapter, cardPresenter, "Popular Movies")
-//                },
-//                { error -> Log.d("RequestError", "$error") })
-//
-//        tmdbApi.getTopRatedMovies(API_KEY).subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread()).subscribe({ response ->
-//                viewModel.addTopRatedMovies(response.results)
-//                addMovieRow(
-//                    viewModel.getTopRatedMovies(),
-//                    rowAdapter,
-//                    cardPresenter,
-//                    "Top Rated Movies"
-//                )
-//            }, { error -> Log.d("RequestError", "$error") }
-//            )
+        val rowAdapter = ArrayObjectAdapter(ListRowPresenter())
+        val cardPresenter = CardPresenter()
+        adapter = rowAdapter
+
+        tmdbApi.getPopularMovies(API_KEY).subscribeOn(Schedulers.io())
+            .subscribe(
+                { response ->
+                    addMovieRow(response.results, rowAdapter, cardPresenter, "Popular Movies")
+                },
+                { error -> Log.d("RequestError", "$error") })
+
+        tmdbApi.getTopRatedMovies(API_KEY).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { response ->
+                    addMovieRow(
+                        response.results,
+                        rowAdapter,
+                        cardPresenter,
+                        "Top Rated Movies"
+                    )
+                }, { error -> Log.d("RequestError", "$error") }
+            )
     }
 
     private fun addMovieRow(

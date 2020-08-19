@@ -17,7 +17,7 @@ class CardPresenter : Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         defaultCardImage = ContextCompat.getDrawable(parent.context, R.drawable.lb_action_bg)
-        defaultBackgroundColor = ContextCompat.getColor(parent.context, R.color.default_background)
+        defaultBackgroundColor = ContextCompat.getColor(parent.context, R.color.primary)
         selectedDefaultBackgroundColor =
             ContextCompat.getColor(parent.context, R.color.focus_background)
 

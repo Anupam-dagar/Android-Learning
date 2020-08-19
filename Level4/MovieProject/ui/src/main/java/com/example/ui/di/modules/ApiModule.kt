@@ -1,8 +1,9 @@
 package com.example.ui.di.modules
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.example.ui.data.Database
+import com.example.ui.data.dao.MovieDao
 import com.example.ui.di.scopes.UiScope
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -27,7 +28,7 @@ class ApiModule(val application: Context) {
 
     @UiScope
     @Provides
-    fun providesMovieDao(database: com.example.ui.data.Database): com.example.ui.data.dao.MovieDao = database.movieDao()
+    fun providesMoviesDao(database: Database): MovieDao = database.moviesDao()
 
     val BASE_URL = "https://api.themoviedb.org/3/"
 

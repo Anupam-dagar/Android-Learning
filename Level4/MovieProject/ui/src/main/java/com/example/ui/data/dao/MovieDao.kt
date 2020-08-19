@@ -4,13 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.ui.data.entity.Movie
+import com.example.ui.di.scopes.UiScope
 
+@UiScope
 @Dao
-interface MovieDao {
+abstract class MovieDao {
 //    fun getMovie(): Movie
     @Query("SELECT * FROM Movie")
-    fun getMovies(): List<Movie>
+    abstract fun getMovies(): List<Movie>
 
     @Insert
-    fun addMovies(moviesData: List<Movie>)
+    abstract fun addMovies(moviesData: List<Movie>)
 }
