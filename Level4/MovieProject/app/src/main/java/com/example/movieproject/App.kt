@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.base.di.components.BaseComponent
 import com.example.base.di.components.BaseComponentProvider
 import com.example.base.di.components.DaggerBaseComponent
+import com.example.base.di.modules.BaseModule
 import com.example.base.utils.InjectUtils
 
 class App: Application(), BaseComponentProvider {
@@ -11,7 +12,7 @@ class App: Application(), BaseComponentProvider {
 
     override fun onCreate() {
         super.onCreate()
-        baseComponent = DaggerBaseComponent.builder().baseModule(InjectUtils.provideBaseComponent(applicationContext)).build()
+        baseComponent = DaggerBaseComponent.builder().baseModule(BaseModule(this)).build()
         baseComponent.inject(this)
     }
 
