@@ -4,22 +4,14 @@ import android.app.Application
 import androidx.room.Room
 import com.example.base.data.Database
 import com.example.base.data.dao.MovieDao
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.ClassKey
+import dagger.multibindings.IntoMap
 import javax.inject.Singleton
 
 @Module
 class BaseModule {
-    @Singleton
-    @Provides
-    fun providesDatabase(applicationContext: Application): Database {
-        return Room.databaseBuilder(
-            applicationContext,
-            Database::class.java, "database-name"
-        ).build()
-    }
 
-    @Singleton
-    @Provides
-    fun providesMovieDao(database: Database): MovieDao = database.movieDao()
 }

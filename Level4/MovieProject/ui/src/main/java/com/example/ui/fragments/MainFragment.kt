@@ -4,22 +4,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
+import com.example.base.IResourceProvider
 import com.example.base.data.Database
 import com.example.base.utils.InjectUtils
-import com.example.ui.di.components.DaggerUiComponent
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class MainFragment : BrowseSupportFragment() {
 
     @Inject
-    lateinit var database: Database
+    lateinit var resourceProvider: IResourceProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        DaggerUiComponent.builder()
-            .baseComponent(InjectUtils.provideBaseComponent(activity?.applicationContext!!))
-            .build()
-            .inject(this)
+        AndroidSupportInjection.inject(this)
+        val database = resourceProvider.providesDatabase()
+        val sdatabase = resourceProvider.providesDatabase()
+
         Log.d("hello", "$database")
+        Log.d("hello", "$sdatabase")
+
     }
 }
