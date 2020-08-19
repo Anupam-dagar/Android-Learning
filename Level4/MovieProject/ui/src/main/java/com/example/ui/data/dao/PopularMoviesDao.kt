@@ -1,10 +1,11 @@
-package com.example.base.data.dao
+package com.example.ui.data.dao
 
 import androidx.lifecycle.MutableLiveData
-import com.example.base.data.entity.Movie
+import com.example.ui.data.entity.Movie
+import com.example.ui.di.scopes.UiScope
 import javax.inject.Singleton
 
-@Singleton
+@UiScope
 class PopularMoviesDao: MovieDao {
     private val moviesList = mutableListOf<Movie>()
     private val movies = MutableLiveData<List<Movie>>()

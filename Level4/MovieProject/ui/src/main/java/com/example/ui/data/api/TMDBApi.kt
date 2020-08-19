@@ -1,6 +1,6 @@
-package com.example.base.api
+package com.example.ui.data.api
 
-import com.example.base.data.entity.MovieResponse
+import com.example.ui.data.entity.MovieResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

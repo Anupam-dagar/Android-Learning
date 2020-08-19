@@ -1,8 +1,6 @@
 package com.example.base.di.components
 
 import android.app.Application
-import com.example.base.api.TMDBApi
-import com.example.base.data.Database
 import com.example.base.di.modules.BaseModule
 import dagger.Component
 import javax.inject.Singleton
@@ -11,6 +9,4 @@ import javax.inject.Singleton
 @Component(modules = [BaseModule::class])
 interface BaseComponent {
     fun inject(app: Application)
-    fun getDatabase(): Database
-    fun getRetrofit(): TMDBApi
 }

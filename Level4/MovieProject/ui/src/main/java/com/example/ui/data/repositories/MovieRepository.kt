@@ -1,11 +1,12 @@
-package com.example.base.data.repositories
+package com.example.ui.data.repositories
 
-import com.example.base.data.dao.MovieDao
-import com.example.base.data.entity.Movie
+import com.example.ui.data.dao.MovieDao
+import com.example.ui.data.entity.Movie
+import com.example.ui.di.scopes.UiScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@UiScope
 class MovieRepository @Inject constructor(private val movieDao: MovieDao) {
     fun getMovie() {
         TODO("NOT YET IMPLEMENTED")
