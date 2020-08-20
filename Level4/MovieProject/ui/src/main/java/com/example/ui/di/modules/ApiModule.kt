@@ -1,10 +1,5 @@
 package com.example.ui.di.modules
 
-import android.content.Context
-import androidx.room.Room
-import com.example.ui.data.Database
-import com.example.ui.data.dao.MovieDao
-import com.example.ui.di.scopes.UiScope
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -16,20 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class ApiModule(val application: Context) {
-    @UiScope
-    @Provides
-    fun providesDatabase(): Database {
-        return Room.databaseBuilder(
-            application,
-            Database::class.java, "database-name"
-        ).build()
-    }
-
-    @UiScope
-    @Provides
-    fun providesMoviesDao(database: Database): MovieDao = database.moviesDao()
-
+class ApiModule {
     val BASE_URL = "https://api.themoviedb.org/3/"
 
     @Provides

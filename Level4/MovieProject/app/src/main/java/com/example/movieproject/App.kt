@@ -12,7 +12,7 @@ class App: Application(), BaseComponentProvider {
 
     override fun onCreate() {
         super.onCreate()
-        baseComponent = DaggerBaseComponent.builder().baseModule(BaseModule()).build()
+        baseComponent = DaggerBaseComponent.builder().baseModule(BaseModule(this)).build()
         baseComponent.inject(this)
     }
 

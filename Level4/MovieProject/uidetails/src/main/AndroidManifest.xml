@@ -6,7 +6,7 @@
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true"
-            android:theme="@style/Theme.Leanback" />
+            android:theme="@style/Theme.Leanback.Details" />
     </application>
 
 </manifest>

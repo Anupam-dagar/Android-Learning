@@ -2,8 +2,6 @@ package com.example.ui.di.components
 
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.di.components.BaseComponent
-import com.example.ui.data.Database
-import com.example.ui.data.dao.MovieDao
 import com.example.ui.di.modules.ApiModule
 import com.example.ui.di.modules.UiModule
 import com.example.ui.di.scopes.UiScope
@@ -16,7 +14,5 @@ import retrofit2.Retrofit
 interface UiComponent {
     fun inject(mainFragment: MainFragment)
     fun getViewModel(): ViewModelProvider.Factory
-    fun getDatabase(): Database
     fun getRetrofit(): Retrofit
-    fun getMoviesDao(): MovieDao
 }

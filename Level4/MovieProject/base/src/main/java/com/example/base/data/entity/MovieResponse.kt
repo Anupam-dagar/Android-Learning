@@ -1,4 +1,4 @@
-package com.example.ui.data.entity
+package com.example.base.data.entity
 
 data class MovieResponse(
     val page: Int,

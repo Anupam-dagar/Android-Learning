@@ -1,11 +1,9 @@
-package com.example.ui.data.repositories
+package com.example.base.data.repositories
 
-import com.example.ui.data.Database
-import com.example.ui.data.entity.Movie
-import com.example.ui.di.scopes.UiScope
+import com.example.base.data.Database
+import com.example.base.data.entity.Movie
 import javax.inject.Inject
 
-@UiScope
 class MovieRepository @Inject constructor(private val database: Database) {
     fun getMovie() {
         TODO("NOT YET IMPLEMENTED")

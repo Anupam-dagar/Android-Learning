@@ -9,9 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
+import com.example.base.data.Database
+import com.example.base.data.entity.Movie
 import com.example.ui.data.api.TMDBApi
-import com.example.ui.data.Database
-import com.example.ui.data.entity.Movie
 import com.example.base.utils.InjectUtils
 import com.example.ui.R
 import com.example.ui.di.components.DaggerUiComponent
@@ -40,7 +40,7 @@ class MainFragment : BrowseSupportFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         DaggerUiComponent.builder()
-            .apiModule(ApiModule(activity?.applicationContext!!))
+            .apiModule(ApiModule())
             .baseComponent(InjectUtils.provideBaseComponent(activity?.applicationContext!!))
             .build()
             .inject(this)
@@ -108,10 +108,8 @@ class MainFragment : BrowseSupportFragment() {
             row: Row?
         ) {
             Log.d("clicked", "Media Item clicked: $item")
-            val intent = Intent(activity, DetailActivity::class.java).apply {
-                // pass the item information
-                extras?.putInt("id", (item as Movie).id)
-            }
+            val intent = Intent(activity, DetailActivity::class.java)
+            intent.putExtra("movie", item as Movie)
             startActivity(intent)
         }
 

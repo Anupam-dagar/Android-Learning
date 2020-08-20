@@ -1,9 +1,12 @@
-package com.example.ui.data.entity
+package com.example.base.data.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity
 data class Movie(
     @ColumnInfo(name="vote_count") val vote_count: Int,
@@ -15,4 +18,4 @@ data class Movie(
     @ColumnInfo(name = "vote_average") val vote_average: Double,
     @ColumnInfo(name = "overview") val overview: String,
     @ColumnInfo(name = "release_date") val release_date: String
-)
+): Parcelable
