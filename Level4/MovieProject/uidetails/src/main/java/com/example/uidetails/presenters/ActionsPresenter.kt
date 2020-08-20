@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.leanback.widget.Presenter
 
-class ActionsPresenter(private var onButtonClickListener: OnButtonClickListener): Presenter(){
-
-    var addToFavourites = true
+class ActionsPresenter(private var onButtonClickListener: OnButtonClickListener, var addToFavourites: Boolean): Presenter(){
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val buttonView = Button(parent.context).apply {
@@ -20,6 +18,7 @@ class ActionsPresenter(private var onButtonClickListener: OnButtonClickListener)
     }
 
     override fun onBindViewHolder(viewHolder: Presenter.ViewHolder?, item: Any?) {
+
         (viewHolder?.view as Button).text = item.toString()
     }
 

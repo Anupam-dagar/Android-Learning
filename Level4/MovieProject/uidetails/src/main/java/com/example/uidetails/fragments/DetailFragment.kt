@@ -34,6 +34,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 import java.lang.ref.WeakReference
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickListener {
     private lateinit var rowsAdapter: ArrayObjectAdapter
@@ -97,32 +98,57 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
         }
         rowsAdapter = ArrayObjectAdapter(selector)
 
-        actionPresenter = ActionsPresenter(this@DetailFragment)
+        var addToFavourites = true
+        getFavouriteMovie(movie!!)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ it ->
+                addToFavourites = it
+                actionPresenter = ActionsPresenter(this@DetailFragment, addToFavourites)
 
-        val detailsOverview = DetailsOverviewRow(movie).apply {
-            getBitmapSingle(Picasso.get(), BASE_IMAGE_URL_POSTER + movie?.poster_path)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ bitmap ->
-                    imageDrawable = BitmapDrawable(resources, bitmap)
-                }, Throwable::printStackTrace)
+                val detailsOverview = DetailsOverviewRow(movie).apply {
+                    getBitmapSingle(Picasso.get(), BASE_IMAGE_URL_POSTER + movie?.poster_path)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ bitmap ->
+                            imageDrawable = BitmapDrawable(resources, bitmap)
+                        }, Throwable::printStackTrace)
 
-            actionsAdapter = ArrayObjectAdapter(actionPresenter).apply {
-                add("Add To Favourite")
+                    actionsAdapter = ArrayObjectAdapter(actionPresenter).apply {
+                        Log.d("he", "$addToFavourites")
+                        if (addToFavourites) add("Add To Favourite") else add("Remove From Favourites")
+                    }
+                }
+                rowsAdapter.add(detailsOverview)
+
+                val listRowAdapter = ArrayObjectAdapter(StringPresenter()).apply {
+                    add("Media Item 1")
+                    add("Media Item 2")
+                    add("Media Item 3")
+                }
+
+                val header = HeaderItem(0, "Related Items")
+                rowsAdapter.add(ListRow(header, listRowAdapter))
+
+                adapter = rowsAdapter
+
+
+            }, Throwable::printStackTrace)
+
+    }
+
+    fun getFavouriteMovie(movie: Movie): Single<Boolean> = Single.create {
+        try {
+            if (!it.isDisposed) {
+                val movieData: Movie? = viewModel.getMovie(movie.id)
+                if (movieData == null) {
+                    it.onSuccess(true)
+                } else {
+                    it.onSuccess(false)
+                }
             }
+        } catch (e: Throwable) {
+            it.onError(e)
         }
-        rowsAdapter.add(detailsOverview)
-
-        val listRowAdapter = ArrayObjectAdapter(StringPresenter()).apply {
-            add("Media Item 1")
-            add("Media Item 2")
-            add("Media Item 3")
-        }
-
-        val header = HeaderItem(0, "Related Items")
-        rowsAdapter.add(ListRow(header, listRowAdapter))
-
-        adapter = rowsAdapter
     }
 
     fun addMovieToRoom(movie: Movie): Single<Movie> = Single.create {

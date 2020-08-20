@@ -2,12 +2,14 @@ package com.example.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.data.Database
 import com.example.base.data.entity.Movie
@@ -22,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import com.example.uidetails.activities.DetailActivity
+import io.reactivex.Single
 
 class MainFragment : BrowseSupportFragment() {
 
@@ -33,6 +36,10 @@ class MainFragment : BrowseSupportFragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
+    lateinit var viewModel: MainFragmentViewModel
+    lateinit var cardPresenter: CardPresenter
+    lateinit var rowAdapter: ArrayObjectAdapter
 
     private val API_KEY = "c1faeeb494d1ad57b496cfdf60084cf3"
 
@@ -46,6 +53,7 @@ class MainFragment : BrowseSupportFragment() {
             .inject(this)
         setupUIElements()
         setupData()
+
         onItemViewClickedListener = ItemViewClickedListener()
     }
 
@@ -59,9 +67,9 @@ class MainFragment : BrowseSupportFragment() {
 
     @SuppressLint("CheckResult")
     private fun setupData() {
-        val viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
-        val rowAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val cardPresenter = CardPresenter()
+        viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
+        rowAdapter = ArrayObjectAdapter(ListRowPresenter())
+        cardPresenter = CardPresenter()
         adapter = rowAdapter
 
         tmdbApi.getPopularMovies(API_KEY).subscribeOn(Schedulers.io())
@@ -83,6 +91,12 @@ class MainFragment : BrowseSupportFragment() {
                     )
                 }, { error -> Log.d("RequestError", "$error") }
             )
+
+        viewModel.getMovies().observe(this, Observer {
+            addMovieRow(it, rowAdapter, cardPresenter, "Favourite Movies")
+        })
+
+
     }
 
     private fun addMovieRow(
