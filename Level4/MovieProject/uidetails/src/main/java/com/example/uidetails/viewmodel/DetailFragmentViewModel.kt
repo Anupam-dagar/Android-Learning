@@ -1,12 +1,11 @@
-package com.example.ui.viewmodel
+package com.example.uidetails.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.base.data.entity.Movie
 import com.example.base.data.repositories.MovieRepository
 import javax.inject.Inject
 
-class MainFragmentViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DetailFragmentViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
     fun getMovies(): List<Movie> = movieRepository.getMovies()
 
     fun addMovies(moviesList: List<Movie>) = movieRepository.addMovies(moviesList)

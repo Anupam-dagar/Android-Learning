@@ -14,4 +14,8 @@ class MovieRepository @Inject constructor(private val database: Database) {
     fun addMovies(moviesList: List<Movie>) {
         database.moviesDao().addMovies(moviesList)
     }
+
+    fun addMovie(movie: Movie) = database.moviesDao().addMovie(movie)
+
+    fun deleteMovie(movie: Movie) = database.moviesDao().deleteMovie(movie)
 }

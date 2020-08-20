@@ -1,6 +1,7 @@
 package com.example.base.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.base.data.entity.Movie
@@ -13,4 +14,10 @@ abstract class MovieDao {
 
     @Insert
     abstract fun addMovies(moviesData: List<Movie>)
+
+    @Insert
+    abstract fun addMovie(movie: Movie)
+
+    @Delete
+    abstract fun deleteMovie(movie: Movie)
 }
