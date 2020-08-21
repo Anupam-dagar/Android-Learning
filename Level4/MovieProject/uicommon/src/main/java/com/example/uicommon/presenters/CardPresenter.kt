@@ -1,11 +1,11 @@
-package com.example.ui.presenters
+package com.example.uicommon.presenters
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.example.base.data.entity.Movie
-import com.example.ui.R
+import com.example.uicommon.R
 import com.squareup.picasso.Picasso
 import kotlin.properties.Delegates
 

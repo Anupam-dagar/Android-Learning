@@ -18,7 +18,7 @@ import com.example.base.utils.InjectUtils
 import com.example.ui.R
 import com.example.ui.di.components.DaggerUiComponent
 import com.example.ui.di.modules.ApiModule
-import com.example.ui.presenters.CardPresenter
+import com.example.uicommon.presenters.CardPresenter
 import com.example.ui.viewmodel.MainFragmentViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

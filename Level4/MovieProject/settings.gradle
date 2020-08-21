@@ -1,3 +1,4 @@
+include ':uicommon'
 include ':uidetails'
 include ':base'
 include ':ui'

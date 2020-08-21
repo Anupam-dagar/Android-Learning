@@ -30,12 +30,12 @@ class ActionsPresenter(private var onButtonClickListener: OnButtonClickListener,
         val button = view.findViewWithTag<Button>("favouriteButton")
         init {
             button.setOnClickListener{
-                onButtonClickListener.onButtonClick(addToFavourites, button)
+                onButtonClickListener.onButtonClick(button)
             }
         }
     }
 
     interface OnButtonClickListener {
-        fun onButtonClick(addToFavourites: Boolean, button: Button)
+        fun onButtonClick(button: Button)
     }
 }

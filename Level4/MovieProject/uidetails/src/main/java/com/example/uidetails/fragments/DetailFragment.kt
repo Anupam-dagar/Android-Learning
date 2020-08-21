@@ -1,6 +1,7 @@
 package com.example.uidetails.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -16,11 +17,14 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.data.Database
 import com.example.base.data.entity.Movie
 import com.example.base.utils.InjectUtils
+import com.example.uicommon.presenters.CardPresenter
 import com.example.uidetails.R
+import com.example.uidetails.activities.DetailActivity
 import com.example.uidetails.presenters.DetailsPresenter
 import com.example.uidetails.presenters.StringPresenter
 import com.example.uidetails.di.components.DaggerUiDetailComponent
@@ -63,6 +67,8 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             ResourcesCompat.getColor(resources, R.color.tertiary, activity?.theme)
         viewModel = ViewModelProvider(this, factory)[DetailFragmentViewModel::class.java]
         buildDetails()
+
+        onItemViewClickedListener = ItemViewClickedListener()
     }
 
     @SuppressLint("CheckResult")
@@ -72,7 +78,6 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ bitmap ->
                 backgroundController.coverBitmap = bitmap
-                // val drawable = BitmapDrawable(context, bitmap)
             }, Throwable::printStackTrace)
         super.onStart()
     }
@@ -96,44 +101,52 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             }
             addClassPresenter(ListRow::class.java, ListRowPresenter())
         }
+
         rowsAdapter = ArrayObjectAdapter(selector)
 
-        var addToFavourites = true
         getFavouriteMovie(movie!!)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ it ->
-                addToFavourites = it
-                actionPresenter = ActionsPresenter(this@DetailFragment, addToFavourites)
-
-                val detailsOverview = DetailsOverviewRow(movie).apply {
-                    getBitmapSingle(Picasso.get(), BASE_IMAGE_URL_POSTER + movie?.poster_path)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ bitmap ->
-                            imageDrawable = BitmapDrawable(resources, bitmap)
-                        }, Throwable::printStackTrace)
-
-                    actionsAdapter = ArrayObjectAdapter(actionPresenter).apply {
-                        Log.d("he", "$addToFavourites")
-                        if (addToFavourites) add("Add To Favourite") else add("Remove From Favourites")
-                    }
-                }
-                rowsAdapter.add(detailsOverview)
-
-                val listRowAdapter = ArrayObjectAdapter(StringPresenter()).apply {
-                    add("Media Item 1")
-                    add("Media Item 2")
-                    add("Media Item 3")
-                }
-
-                val header = HeaderItem(0, "Related Items")
-                rowsAdapter.add(ListRow(header, listRowAdapter))
+                setupDetailView(it)
+                setupRelatedMovies()
 
                 adapter = rowsAdapter
-
-
             }, Throwable::printStackTrace)
+    }
 
+    fun setupRelatedMovies() {
+        val listRowAdapter = ArrayObjectAdapter(CardPresenter())
+
+        viewModel.getMovies().observe(this, Observer {
+            listRowAdapter.clear()
+            for (movie in it) {
+                listRowAdapter.add(movie)
+            }
+        })
+
+        val header = HeaderItem(0, "Favourite Movies")
+        rowsAdapter.add(ListRow(header, listRowAdapter))
+    }
+
+    fun setupDetailView(addToFavourites: Boolean) {
+        actionPresenter = ActionsPresenter(this@DetailFragment, addToFavourites)
+
+        val detailsOverview = DetailsOverviewRow(movie).apply {
+            getBitmapSingle(Picasso.get(), BASE_IMAGE_URL_POSTER + movie?.poster_path)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ bitmap ->
+                    imageDrawable = BitmapDrawable(resources, bitmap)
+                }, Throwable::printStackTrace)
+
+            actionsAdapter = ArrayObjectAdapter(actionPresenter).apply {
+                Log.d("he", "$addToFavourites")
+                if (addToFavourites) add("Add To Favourite") else add("Remove From Favourites")
+            }
+        }
+
+        rowsAdapter.add(detailsOverview)
     }
 
     fun getFavouriteMovie(movie: Movie): Single<Boolean> = Single.create {
@@ -178,13 +191,13 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
     }
 
     @SuppressLint("CheckResult")
-    override fun onButtonClick(addToFavourites: Boolean, button: Button) {
-        if (addToFavourites) {
+    override fun onButtonClick(button: Button) {
+        if (actionPresenter.addToFavourites) {
             addMovieToRoom(movie!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movie ->
-                    actionPresenter.addToFavourites = !addToFavourites
+                    actionPresenter.addToFavourites = !actionPresenter.addToFavourites
                     updateButtonText(button, "Remove From Favourites")
                 }, Throwable::printStackTrace)
         } else {
@@ -192,9 +205,28 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movie ->
-                    actionPresenter.addToFavourites = !addToFavourites
+                    actionPresenter.addToFavourites = !actionPresenter.addToFavourites
                     updateButtonText(button, "Add To Favourites")
                 }, Throwable::printStackTrace)
         }
+    }
+
+
+    inner class ItemViewClickedListener : OnItemViewClickedListener {
+        override fun onItemClicked(
+            itemViewHolder: Presenter.ViewHolder?,
+            item: Any?,
+            rowViewHolder: RowPresenter.ViewHolder?,
+            row: Row?
+        ) {
+            if (itemViewHolder is ActionsPresenter.ViewHolder) {
+                onButtonClick(itemViewHolder.button)
+            } else {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("movie", item as Movie)
+                startActivity(intent)
+            }
+        }
+
     }
 }
