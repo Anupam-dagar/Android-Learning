@@ -52,9 +52,12 @@ class MainFragment : BrowseSupportFragment() {
             .build()
             .inject(this)
         setupUIElements()
-        setupData()
-
         onItemViewClickedListener = ItemViewClickedListener()
+    }
+
+    override fun onResume() {
+        setupData()
+        super.onResume()
     }
 
     private fun setupUIElements() {
@@ -95,8 +98,6 @@ class MainFragment : BrowseSupportFragment() {
         viewModel.getMovies().observe(this, Observer {
             addMovieRow(it, rowAdapter, cardPresenter, "Favourite Movies")
         })
-
-
     }
 
     private fun addMovieRow(
