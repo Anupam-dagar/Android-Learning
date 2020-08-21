@@ -1,19 +1,15 @@
 package com.example.base.data.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.base.data.entity.Movie
 
 @Dao
 abstract class MovieDao {
-    //    fun getMovie(): Movie
-    @Query("SELECT * FROM Movie")
-    abstract fun getMovies(): LiveData<List<Movie>>
+    @Query("SELECT * FROM Movie WHERE movieType = :queryVal")
+    abstract fun getMovies(queryVal: String): LiveData<List<Movie>>
 
-    @Insert
+    @Insert(onConflict =  OnConflictStrategy.REPLACE)
     abstract fun addMovies(moviesData: List<Movie>)
 
     @Insert
@@ -24,4 +20,7 @@ abstract class MovieDao {
 
     @Query("SELECT * FROM Movie WHERE id = :id")
     abstract fun getMovie(id: Int): Movie
+
+    @Update
+    abstract fun updateMovie(movie: Movie)
 }

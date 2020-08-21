@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity
-data class Movie(
+data class FavouriteMovie(
     @ColumnInfo(name="vote_count") val vote_count: Int,
     @ColumnInfo(name="popularity") val popularity: Double,
     @ColumnInfo(name = "poster_path") val poster_path: String,

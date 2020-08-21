@@ -11,8 +11,11 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.example.base.data.Database
 import com.example.base.data.entity.Movie
+import com.example.base.data.entity.MovieResponse
 import com.example.ui.data.api.TMDBApi
 import com.example.base.utils.InjectUtils
 import com.example.ui.R
@@ -24,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import com.example.uidetails.activities.DetailActivity
+import io.reactivex.Observable
 import io.reactivex.Single
 
 class MainFragment : BrowseSupportFragment() {
@@ -70,52 +74,84 @@ class MainFragment : BrowseSupportFragment() {
 
     @SuppressLint("CheckResult")
     private fun setupData() {
+        prepareEntranceTransition()
         viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
         rowAdapter = ArrayObjectAdapter(ListRowPresenter())
         cardPresenter = CardPresenter()
         adapter = rowAdapter
 
-        tmdbApi.getPopularMovies(API_KEY).subscribeOn(Schedulers.io())
-            .subscribe(
-                { response ->
-                    addMovieRow(response.results, rowAdapter, cardPresenter, "Popular Movies")
-                },
-                { error -> Log.d("RequestError", "$error") })
+        val favouriteMoviesAdapter = ArrayObjectAdapter(cardPresenter)
+        val popularMoviesAdapter = ArrayObjectAdapter(cardPresenter)
+        val topRatedMoviesAdapter = ArrayObjectAdapter(cardPresenter)
 
-        tmdbApi.getTopRatedMovies(API_KEY).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { response ->
-                    addMovieRow(
-                        response.results,
-                        rowAdapter,
-                        cardPresenter,
-                        "Top Rated Movies"
-                    )
-                }, { error -> Log.d("RequestError", "$error") }
-            )
+        rowAdapter.add(ListRow(HeaderItem("Popular Movies"), popularMoviesAdapter))
+        rowAdapter.add(ListRow(HeaderItem("Top Rated Movies"), topRatedMoviesAdapter))
+        rowAdapter.add(ListRow(HeaderItem("Favourite Movies"), favouriteMoviesAdapter))
 
-        viewModel.getMovies().observe(this, Observer {
-            addMovieRow(it, rowAdapter, cardPresenter, "Favourite Movies")
+        val popularMoviesObservable = tmdbApi.getPopularMovies(API_KEY)
+        val topRatedMoviesObservable = tmdbApi.getTopRatedMovies(API_KEY)
+
+        viewModel.getMovies("popular").observe(this, Observer {
+            Log.d("test", "dbpo")
+            addMovieRow(it, popularMoviesAdapter)
         })
+
+        viewModel.getMovies("toprated").observe(this, Observer {
+            Log.d("test", "dbtp")
+            addMovieRow(it, topRatedMoviesAdapter)
+        })
+
+        viewModel.getFavouriteMovies().observe(this, Observer {
+            val movies = mutableListOf<Movie>()
+            for (favmovie in it) {
+                val movie = Movie(
+                    favmovie.vote_count,
+                    favmovie.popularity,
+                    favmovie.poster_path,
+                    favmovie.id,
+                    favmovie.backdrop_path,
+                    favmovie.title,
+                    favmovie.vote_average,
+                    favmovie.overview,
+                    favmovie.release_date,
+                    favmovie.movieType
+                )
+                movies.add(movie)
+            }
+            addMovieRow(movies, favouriteMoviesAdapter)
+        })
+
+        Observable.merge(
+            popularMoviesObservable.subscribeOn(Schedulers.io()).filter {
+                for (i in it.results.indices) {
+                    it.results[i].movieType = "popular"
+                }
+                true
+            },
+            topRatedMoviesObservable.subscribeOn(Schedulers.io()).filter {
+                for (i in it.results.indices) {
+                    it.results[i].movieType = "toprated"
+                }
+                true
+            })
+            .subscribe({
+                viewModel.addMovies(it.results)
+            }, { e -> Log.d("Request Error", "$e") })
+
+
     }
 
     private fun addMovieRow(
         movies: List<Movie>,
-        rowAdapter: ArrayObjectAdapter,
-        cardPresenter: CardPresenter,
-        header: String
+        itemAdapter: ArrayObjectAdapter
     ) {
-        val listRowAdapter = ArrayObjectAdapter(cardPresenter)
-
+        itemAdapter.clear()
         for (movie in movies) {
-            listRowAdapter.add(movie)
+            itemAdapter.add(movie)
         }
-
-        rowAdapter.add(ListRow(HeaderItem(header), listRowAdapter))
     }
 
-    inner class ItemViewClickedListener: OnItemViewClickedListener {
+    inner class ItemViewClickedListener : OnItemViewClickedListener {
         override fun onItemClicked(
             itemViewHolder: Presenter.ViewHolder?,
             item: Any?,

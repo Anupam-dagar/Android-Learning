@@ -20,6 +20,7 @@ import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.data.Database
+import com.example.base.data.entity.FavouriteMovie
 import com.example.base.data.entity.Movie
 import com.example.base.utils.InjectUtils
 import com.example.uicommon.presenters.CardPresenter
@@ -118,9 +119,21 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
     fun setupRelatedMovies() {
         val listRowAdapter = ArrayObjectAdapter(CardPresenter())
 
-        viewModel.getMovies().observe(this, Observer {
+        viewModel.getFavouriteMovies().observe(this, Observer {
             listRowAdapter.clear()
-            for (movie in it) {
+            for (favmovie in it) {
+                val movie = Movie(
+                    favmovie.vote_count,
+                    favmovie.popularity,
+                    favmovie.poster_path,
+                    favmovie.id,
+                    favmovie.backdrop_path,
+                    favmovie.title,
+                    favmovie.vote_average,
+                    favmovie.overview,
+                    favmovie.release_date,
+                    favmovie.movieType
+                )
                 listRowAdapter.add(movie)
             }
         })
@@ -152,7 +165,19 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
     fun getFavouriteMovie(movie: Movie): Single<Boolean> = Single.create {
         try {
             if (!it.isDisposed) {
-                val movieData: Movie? = viewModel.getMovie(movie.id)
+                val favMovie = FavouriteMovie(
+                    movie.vote_count,
+                    movie.popularity,
+                    movie.poster_path,
+                    movie.id,
+                    movie.backdrop_path,
+                    movie.title,
+                    movie.vote_average,
+                    movie.overview,
+                    movie.release_date,
+                    movie.movieType
+                )
+                val movieData: FavouriteMovie? = viewModel.getFavouriteMovie(favMovie.id)
                 if (movieData == null) {
                     it.onSuccess(true)
                 } else {
@@ -167,7 +192,19 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
     fun addMovieToRoom(movie: Movie): Single<Movie> = Single.create {
         try {
             if (!it.isDisposed) {
-                viewModel.addMovie(movie)
+                val favMovie = FavouriteMovie(
+                    movie.vote_count,
+                    movie.popularity,
+                    movie.poster_path,
+                    movie.id,
+                    movie.backdrop_path,
+                    movie.title,
+                    movie.vote_average,
+                    movie.overview,
+                    movie.release_date,
+                    movie.movieType
+                )
+                viewModel.addFavouriteMovie(favMovie)
                 it.onSuccess(movie)
             }
         } catch (e: Throwable) {
@@ -178,7 +215,19 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
     fun removeMovieFromRoom(movie: Movie): Single<Movie> = Single.create {
         try {
             if (!it.isDisposed) {
-                viewModel.deleteMovie(movie)
+                val favMovie = FavouriteMovie(
+                    movie.vote_count,
+                    movie.popularity,
+                    movie.poster_path,
+                    movie.id,
+                    movie.backdrop_path,
+                    movie.title,
+                    movie.vote_average,
+                    movie.overview,
+                    movie.release_date,
+                    movie.movieType
+                )
+                viewModel.deleteFavouriteMovie(favMovie)
                 it.onSuccess(movie)
             }
         } catch (e: Throwable) {
@@ -196,7 +245,7 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             addMovieToRoom(movie!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ movie ->
+                .subscribe({
                     actionPresenter.addToFavourites = !actionPresenter.addToFavourites
                     updateButtonText(button, "Remove From Favourites")
                 }, Throwable::printStackTrace)
@@ -204,7 +253,7 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             removeMovieFromRoom(movie!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ movie ->
+                .subscribe({
                     actionPresenter.addToFavourites = !actionPresenter.addToFavourites
                     updateButtonText(button, "Add To Favourites")
                 }, Throwable::printStackTrace)
