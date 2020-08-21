@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
@@ -57,6 +58,7 @@ class MainFragment : BrowseSupportFragment() {
             .inject(this)
         setupUIElements()
         onItemViewClickedListener = ItemViewClickedListener()
+        setOnSearchClickedListener(SearchClickedListener())
     }
 
     override fun onResume() {
@@ -163,6 +165,11 @@ class MainFragment : BrowseSupportFragment() {
             intent.putExtra("movie", item as Movie)
             startActivity(intent)
         }
+    }
 
+    inner class SearchClickedListener : View.OnClickListener {
+        override fun onClick(p0: View?) {
+            Toast.makeText(activity, "Search Button Clicked", Toast.LENGTH_LONG).show();
+        }
     }
 }
