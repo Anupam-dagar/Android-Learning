@@ -9,9 +9,9 @@ import dagger.Provides
 
 
 @Module
-class BaseModule(val application: Application) {
+open class BaseModule(val application: Application) {
     @Provides
-    fun providesDatabase(): Database {
+    open fun providesDatabase(): Database {
         return Room.databaseBuilder(
             application,
             Database::class.java, "database-name"
@@ -19,5 +19,5 @@ class BaseModule(val application: Application) {
     }
 
     @Provides
-    fun providesMoviesDao(database: Database): MovieDao = database.moviesDao()
+    open fun providesMoviesDao(database: Database): MovieDao = database.moviesDao()
 }

@@ -7,7 +7,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule(val application: Application) {
+open class ApplicationModule(val application: Application) {
 
     @Appscope
     @Provides
