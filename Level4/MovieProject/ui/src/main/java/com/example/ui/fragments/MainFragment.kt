@@ -56,12 +56,13 @@ class MainFragment : BrowseSupportFragment() {
             .baseComponent(InjectUtils.provideBaseComponent(activity?.applicationContext!!))
             .build()
             .inject(this)
-        setupUIElements()
+        headersState = BrowseSupportFragment.HEADERS_DISABLED
         onItemViewClickedListener = ItemViewClickedListener()
-        setOnSearchClickedListener(SearchClickedListener())
     }
 
     override fun onResume() {
+        brandColor = ContextCompat.getColor(requireContext(), R.color.secondary)
+        searchAffordanceColor = ContextCompat.getColor(requireContext(), R.color.tertiary)
         setupData()
         super.onResume()
     }
@@ -70,12 +71,13 @@ class MainFragment : BrowseSupportFragment() {
         title = "Movies"
         headersState = BrowseSupportFragment.HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
-        brandColor = ContextCompat.getColor(context!!, R.color.secondary)
-        searchAffordanceColor = ContextCompat.getColor(context!!, R.color.tertiary)
+        setOnSearchClickedListener(SearchClickedListener())
     }
 
     @SuppressLint("CheckResult")
     private fun setupData() {
+        progressBarManager.enableProgressBar()
+        progressBarManager.show()
         prepareEntranceTransition()
         viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
         rowAdapter = ArrayObjectAdapter(ListRowPresenter())
@@ -128,17 +130,27 @@ class MainFragment : BrowseSupportFragment() {
                 for (i in it.results.indices) {
                     it.results[i].movieType = "popular"
                 }
+                viewModel.addMovies(it.results)
                 true
             },
             topRatedMoviesObservable.subscribeOn(Schedulers.io()).filter {
                 for (i in it.results.indices) {
                     it.results[i].movieType = "toprated"
                 }
+                viewModel.addMovies(it.results)
                 true
             })
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                viewModel.addMovies(it.results)
-            }, { e -> Log.d("Request Error", "$e") })
+                progressBarManager.hide()
+                view?.visibility = View.VISIBLE
+                setupUIElements()
+            }, { e ->
+                Log.d("Request Error", "$e")
+                progressBarManager.hide()
+                view?.visibility = View.VISIBLE
+                setupUIElements()
+            })
 
 
     }
