@@ -11,20 +11,20 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class ApiModule {
+open class ApiModule {
     val BASE_URL = "https://api.themoviedb.org/3/"
 
     @Provides
-    fun providesOkHttpClient(interceptor: Interceptor): OkHttpClient {
+    open fun providesOkHttpClient(interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder().addInterceptor(interceptor).build()
     }
 
     @Provides
-    fun providesGsonFactory(): GsonConverterFactory =
+    open fun providesGsonFactory(): GsonConverterFactory =
         GsonConverterFactory.create(GsonBuilder().setLenient().create())
 
     @Provides
-    fun providesInterceptor(): Interceptor {
+    open fun providesInterceptor(): Interceptor {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -32,7 +32,7 @@ class ApiModule {
     }
 
     @Provides
-    fun providesRetrofitAdapter(
+    open fun providesRetrofitAdapter(
         gsonConverterFactory: GsonConverterFactory,
         okHttpClient: OkHttpClient
     ): Retrofit {
@@ -45,7 +45,7 @@ class ApiModule {
     }
 
     @Provides
-    fun providesTMDBApi(retrofit: Retrofit): com.example.ui.data.api.TMDBApi {
+    open fun providesTMDBApi(retrofit: Retrofit): com.example.ui.data.api.TMDBApi {
         return retrofit.create(com.example.ui.data.api.TMDBApi::class.java)
     }
 }
