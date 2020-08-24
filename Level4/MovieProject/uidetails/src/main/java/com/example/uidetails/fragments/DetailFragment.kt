@@ -62,14 +62,18 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             .baseComponent(InjectUtils.provideBaseComponent(activity?.applicationContext!!))
             .build()
             .inject(this)
-        movie = activity?.intent?.getParcelableExtra<Movie>("movie")
         backgroundController.enableParallax()
         backgroundController.solidColor =
             ResourcesCompat.getColor(resources, R.color.tertiary, activity?.theme)
         viewModel = ViewModelProvider(this, factory)[DetailFragmentViewModel::class.java]
-        buildDetails()
 
         onItemViewClickedListener = ItemViewClickedListener()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        movie = arguments?.getParcelable("movie")
+        buildDetails()
+        super.onActivityCreated(savedInstanceState)
     }
 
     @SuppressLint("CheckResult")
@@ -80,6 +84,7 @@ class DetailFragment : DetailsSupportFragment(), ActionsPresenter.OnButtonClickL
             .subscribe({ bitmap ->
                 backgroundController.coverBitmap = bitmap
             }, Throwable::printStackTrace)
+        Log.d("testfrag", "onstartcompleted")
         super.onStart()
     }
 
